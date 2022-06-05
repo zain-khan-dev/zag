@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import com.zain.Scanner;
+import java.util.List;
 public class Zag {
 
     private static boolean hadError = false;
@@ -20,7 +22,7 @@ public class Zag {
 
     private static void report(int line, String where, String message){
 
-        System.err.println("["+line+"]" + " Error: "+ where +" Failed with "+ message)
+        System.err.println("["+line+"]" + " Error: "+ where +" Failed with "+ message);
 
 
         hadError = true;
@@ -33,7 +35,13 @@ public class Zag {
 
 
     public static void run(String command) {
-        // Scanner scanner = new Scanner;
+        Scanner scanner = new Scanner(command);
+
+        List<Token> tokens = scanner.scanTokens();
+        for(Token token:tokens){
+            System.out.println(token.type + " " + token.lexeme);
+        }
+
     }
 
     public static void runFile(String fileName) throws IOException{

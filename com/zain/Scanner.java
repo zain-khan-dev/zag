@@ -62,15 +62,15 @@ public class Scanner {
     }
 
 
-    // functions check if the next character is what is given as parameter if it does then we increment the current value.
+    // function to check if the next character is what is given as parameter if it does then we increment the current value.
     private boolean match(char c){
         if(isAtEnd()){
             return false;
         }
-        if(source.charAt(current+1) != c){
+        if(source.charAt(current) != c){
             return false;
         }
-        current++;
+        advance();
         return true;
     }
 
@@ -78,7 +78,7 @@ public class Scanner {
         // if we at end then return null terminator
         if(isAtEnd())
             return  '\0';
-        return source.charAt(current + 1);
+        return source.charAt(current);
     }
 
 
@@ -149,7 +149,11 @@ public class Scanner {
     }
 
     void handleIdentifier() {
-        while(isAlphaNumeric(peek())) advance();
+        while(isAlphaNumeric(peek())) {
+            System.out.println(current);
+            advance();
+        }
+        
         String token = source.substring(start, current);
         TokenType tokenType = keywords.get(token);
         if(tokenType == null){
@@ -177,10 +181,10 @@ public class Scanner {
             
             // case where either one or two characters can act as a lexeme together
 
-            case '!':addToken(match('=')?BANG:BANG_EQUAL);
-            case '=':addToken(match('=')?EQUAL:EQUAL_EQUAL);
-            case '<':addToken(match('=')?LESS:LESS_EQUAL);
-            case '>':addToken(match('=')?GREATER:GREATER_EQUAL);
+            case '!':addToken(match('=')?BANG_EQUAL:BANG);break;
+            case '=':addToken(match('=')?EQUAL_EQUAL:EQUAL);break;
+            case '<':addToken(match('=')?LESS_EQUAL:LESS);break;
+            case '>':addToken(match('=')?GREATER_EQUAL:GREATER);break;
 
 
             // case for handling comments
@@ -192,6 +196,7 @@ public class Scanner {
                 else{
                     addToken(SLASH);
                 }
+                break;
 
 
             // handling white space characters and new line
@@ -208,7 +213,7 @@ public class Scanner {
             line++;
             break;
 
-            case '"':handleString();
+            case '"':handleString();break;
 
 
             // any other character apart from these will report unexpected character
@@ -223,7 +228,7 @@ public class Scanner {
                 else{
                     Zag.error(line, "Unexpected character" + c);
                 }
-                
+                break;
         }
     }
 
