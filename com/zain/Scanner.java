@@ -150,7 +150,6 @@ public class Scanner {
 
     void handleIdentifier() {
         while(isAlphaNumeric(peek())) {
-            System.out.println(current);
             advance();
         }
         
@@ -162,6 +161,21 @@ public class Scanner {
         else{
             addToken(tokenType);
         }
+    }
+    
+
+
+    void handleMultiComment() {
+        while(!(peek() == '*' && peekNext() =='/' )){
+            if(peek() == '\n'){
+                line++;
+            }
+            advance();
+        }
+        // advance remove for star
+        advance();
+        // advance to remove for slash
+        advance();
     }
 
 
@@ -187,16 +201,25 @@ public class Scanner {
             case '>':addToken(match('=')?GREATER_EQUAL:GREATER);break;
 
 
-            // case for handling comments
+
             case '/':
+                // case for handling signle line comments
                 if(match('/')){
                     // exhaust the complete line since it is a comment
                     while(peek() != '\n' && !isAtEnd()) advance();
+                }
+                else
+                if(match('*')){
+                    handleMultiComment();
+
                 }
                 else{
                     addToken(SLASH);
                 }
                 break;
+
+
+
 
 
             // handling white space characters and new line
