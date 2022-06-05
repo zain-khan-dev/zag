@@ -1,9 +1,9 @@
-package com.zain;
+package com.zain.zag;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import static com.zain.TokenType.*;
+import static com.zain.zag.TokenType.*;
 
 
 public class Scanner {

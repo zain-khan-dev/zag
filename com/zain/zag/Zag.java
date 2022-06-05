@@ -1,4 +1,4 @@
-package com.zain;
+package com.zain.zag;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import com.zain.Scanner;
+import com.zain.zag.Scanner;
 import java.util.List;
 public class Zag {
 

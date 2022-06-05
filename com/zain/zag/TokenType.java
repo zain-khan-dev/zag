@@ -1,4 +1,4 @@
-package com.zain;
+package com.zain.zag;
 
 enum TokenType {
     

@@ -4,11 +4,11 @@ all: build run
 
 
 build: 
-	javac com/zain/Zag.java
+	javac com/zain/zag/Zag.java
 
 run: 
-	java com/zain/Zag ${ARGS}
+	java com/zain/zag/Zag ${ARGS}
 
 clean:
-	rm -rf com/zain/*.class
+	rm -rf com/zain/zag/*.class
 
