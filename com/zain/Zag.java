@@ -8,6 +8,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 public class Zag {
 
+    private static boolean hadError = false;
+
+
+    public static void error (int line, String message) { 
+
+        report(line, "", message);
+
+    }
+
+
+    private static void report(int line, String where, String message){
+
+        System.err.println("["+line+"]" + " Error: "+ where +" Failed with "+ message)
+
+
+        hadError = true;
+    }
 
 
     public static void parseCommand(String command) {
@@ -23,6 +40,9 @@ public class Zag {
         byte[] bytes = Files.readAllBytes(Path.of(fileName));
 
         run(new String(bytes, Charset.defaultCharset()));
+        if(hadError){
+            System.exit(65);
+        }
 
     }
 
@@ -49,6 +69,7 @@ public class Zag {
         else
         if(args.length == 1){
             runFile(args[0]);
+            hadError = false;
         }
         else{
             runPrompt();
