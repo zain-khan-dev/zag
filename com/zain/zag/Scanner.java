@@ -84,6 +84,7 @@ public class Scanner {
 
 
 
+
     void handleString() {
 
         // Consumer characters in the string untill we hit an ending double-quote
