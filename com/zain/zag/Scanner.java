@@ -88,7 +88,7 @@ public class Scanner {
     void handleString() {
 
         // Consumer characters in the string untill we hit an ending double-quote
-        while(peek() != '"' && isAtEnd()){
+        while(peek() != '"' && !isAtEnd()){
             // to support multi line string
             if(peek() == '\n'){
                 line++;
