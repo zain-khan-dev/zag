@@ -15,6 +15,7 @@ import java.util.List;
 public class Zag {
 
     private static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
 
     public static void error (int line, String message) { 
@@ -46,6 +47,11 @@ public class Zag {
     }
 
 
+    static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() +"\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
+    }
+
     public static void run(String command) {
         Scanner scanner = new Scanner(command);
 
@@ -54,6 +60,10 @@ public class Zag {
         Parser parser = new Parser(tokens);
 
         Expr expr = parser.parse();
+
+        Interpreter interpreter = new Interpreter();
+
+        interpreter.interpret(expr);
 
         System.out.println(new AstPrinter().print(expr));
 
@@ -69,6 +79,8 @@ public class Zag {
         if(hadError){
             System.exit(65);
         }
+        if (hadRuntimeError) 
+            System.exit(70);
 
     }
 
