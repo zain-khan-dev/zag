@@ -1,5 +1,6 @@
 package com.zain.zag;
 import java.util.List;
+import java.util.ArrayList;
 import static com.zain.zag.TokenType.*;
 
 
@@ -17,12 +18,17 @@ public class Parser {
     }
 
 
-    Expr parse() {
+    List<Stmt> parse() {
+        List<Stmt>statements = new ArrayList<>();
         try{
-            return expression();
+            while(!isAtEnd()){
+                statements.add(statement());
+            }
         } catch(ParseError error){
             return null;
         }
+        return statements;
+        
     }
 
 
@@ -141,7 +147,6 @@ public class Parser {
     }
 
 
-
     private Expr comparison() {
         Expr result = conditional();
 
@@ -154,7 +159,6 @@ public class Parser {
     }
 
 
-    
 
 
     private Expr equality() {
@@ -226,6 +230,45 @@ public class Parser {
         }
         return false;
     }
+
+
+
+
+    private Stmt handlePrintStatement(){
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ; after print statement.");
+        return new Stmt.Print(value);
+    }
+
+
+    private Stmt handleExpressionStmt() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ; after expression.");
+        return new Stmt.Expression(expr);
+    }
+
+
+    private Stmt handleVarDeclaration() {
+        Object value = primary();
+        if(match(EQUAL)){
+            Expr expr = expression();
+            new Stmt.Expression(expr);
+        }
+        consume(SEMICOLON, "Expected Semicolon at the end of statement");
+    }
+
+    private Stmt statement() {
+        if(match(PRINT)){
+            return handlePrintStatement();   
+        }
+        else
+        if(match(VAR)){
+            return handleVarDeclaration();
+        }
+        return handleExpressionStmt(); 
+    }
+
+    
 
 
 }

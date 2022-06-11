@@ -1,21 +1,30 @@
 package com.zain.zag;
 
 import com.zain.zag.Expr.Visitor;
+import java.util.List;
 import static com.zain.zag.TokenType.*;
 
 
-public class Interpreter implements Visitor<Object>{
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
-    public void interpret(Expr expression) {
+    public void interpret(List<Stmt>statements) {
+
+        
         try{
-            Object value = evaluate(expression);
-            System.out.println(stringify(value)); 
+            for(Stmt statement:statements){
+                execute(statement);
+            }
         }
         catch(RuntimeError error){
             Zag.runtimeError(error);
         }
         
+    }
+
+
+    public void execute(Stmt statement){
+        statement.accept(this);
     }
 
 
@@ -30,6 +39,21 @@ public class Interpreter implements Visitor<Object>{
             return number;
         }
         return value.toString();
+    }
+
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmtExpression) { 
+        Expr expression = stmtExpression.expression;
+        evaluate(expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print printExpression) {
+        Object value = evaluate(printExpression.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
 

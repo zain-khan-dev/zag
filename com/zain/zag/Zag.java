@@ -59,13 +59,11 @@ public class Zag {
         
         Parser parser = new Parser(tokens);
 
-        Expr expr = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         Interpreter interpreter = new Interpreter();
 
-        interpreter.interpret(expr);
-
-        System.out.println(new AstPrinter().print(expr));
+        interpreter.interpret(statements);
 
         // for(Token token:tokens){
         //     System.out.println(token.type + " " + token.lexeme);

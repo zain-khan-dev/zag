@@ -99,19 +99,21 @@ if __name__ == '__main__':
         exit()
 
     output_dir = sys.argv[1]
-    # paramList = [
-    #      "Binary   : Expr left, Token operator, Expr right",
-    #      "Grouping  : Expr Expression",
-    #      "Literal  : Object value",
-    #      "Unary  : Token operator, Expr right" 
-    #  ]
-    # basename = "Expr"
     paramList = [
-      "Expression : Expr expression",
-      "Print      : Expr expression"
-    ]
+         "Binary   : Expr left, Token operator, Expr right",
+         "Grouping  : Expr Expression",
+         "Literal  : Object value",
+         "Unary  : Token operator, Expr right",
+         "Variable : Token name"
+     ]
+    basename = "Expr"
+    # paramList = [
+    #   "Expression : Expr expression",
+    #   "Print      : Expr expression",
+    #   "Var        : Token name, Expr initializer"
+    # ]
 
-    basename = "Stmt"
+    # basename = "Stmt"
     print(output_dir)
     define_ast(output_dir,basename, paramList)
     # print(generate_visitor_interface(paramList, basename))
