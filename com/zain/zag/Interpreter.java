@@ -103,6 +103,8 @@ public class Interpreter implements Visitor<Object>{
         }
 
         switch(expr.operator.type){
+            case COMMA:
+                return (double)right;
             case GREATER:
                 return (double)left > (double)right;
             case GREATER_EQUAL:
