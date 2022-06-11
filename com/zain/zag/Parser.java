@@ -6,6 +6,8 @@ import static com.zain.zag.TokenType.*;
 
 public class Parser {
     
+    private static class ParseError extends RuntimeException {}
+
     private final List<Token> tokens;
 
     private int current = 0;
@@ -15,9 +17,54 @@ public class Parser {
     }
 
 
-    private void consume(TokenType token, String ErrorMessage){
+    Expr parse() {
+        try{
+            return expression();
+        } catch(ParseError error){
+            return null;
+        }
+    }
+
+
+    private ParseError error(Token token, String message) {
+        Zag.error(token, message);
+        return new ParseError();
+    }
+
+    private Token consume(TokenType token, String errorMessage){
+        if(check(token)){
+            return advance();
+        }
+        throw error(peek(), errorMessage);
+    }
+
+
+
+    private void synchronize() {
+        advance();
+
+        while(!isAtEnd()){
+
+            if(previous().type == SEMICOLON)
+            return;
+
+            switch(peek().type){
+                case CLASS:
+                case IF:
+                case WHILE:
+                case FUN:
+                case FOR:
+                case PRINT:
+                case RETURN:
+                case VAR:
+                    return;
+            }
+            advance();
+        }
 
     }
+
+
 
 
     private Expr primary() {
@@ -41,6 +88,7 @@ public class Parser {
             return new Expr.Grouping(expr);
         }
 
+        throw error(peek(), "An expression expected");
     }
 
     private Expr unary() {
@@ -64,6 +112,7 @@ public class Parser {
             Expr rightExpr = unary();
             result = new Expr.Binary(result, operator, rightExpr);
         }
+        return result;
     }
 
 
@@ -136,7 +185,7 @@ public class Parser {
         while(match(BANG_EQUAL, EQUAL_EQUAL)){
             Token operator = previous();
             Expr right = comparison();
-            expr = new Expr.Binary(expr, operator, right)
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }

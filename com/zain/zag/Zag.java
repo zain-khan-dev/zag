@@ -32,6 +32,14 @@ public class Zag {
         hadError = true;
     }
 
+    public static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+          report(token.line, " at end", message);
+        } else {
+          report(token.line, " at '" + token.lexeme + "'", message);
+        }
+      }
+
 
     public static void parseCommand(String command) {
         System.out.println("This command will be parsed " + command);
@@ -42,10 +50,16 @@ public class Zag {
         Scanner scanner = new Scanner(command);
 
         List<Token> tokens = scanner.scanTokens();
-        for(Token token:tokens){
-            System.out.println(token.type + " " + token.lexeme);
-        }
+        
+        Parser parser = new Parser(tokens);
 
+        Expr expr = parser.parse();
+
+        System.out.println(new AstPrinter().print(expr));
+
+        // for(Token token:tokens){
+        //     System.out.println(token.type + " " + token.lexeme);
+        // }
     }
 
     public static void runFile(String fileName) throws IOException{
@@ -75,26 +89,26 @@ public class Zag {
 
     public static void main(String []args) throws IOException {
         
-        Expr expression = new Expr.Binary(
-            new Expr.Unary(
-                new Token(TokenType.MINUS, "-", null, 1),
-                 new Expr.Literal(123)),
-                 new Token(TokenType.STAR, "*", null, 1), new Expr.Grouping(new Expr.Literal(45.67)));
+        // Expr expression = new Expr.Binary(
+        //     new Expr.Unary(
+        //         new Token(TokenType.MINUS, "-", null, 1),
+        //          new Expr.Literal(123)),
+        //          new Token(TokenType.STAR, "*", null, 1), new Expr.Grouping(new Expr.Literal(45.67)));
 
-        System.out.println(new AstPrinter().print(expression));
+        // System.out.println(new AstPrinter().print(expression));
         
-        // if(args.length > 1){
-        //     System.out.println("Zag usage Zag [file.zag]");
-        //     System.exit(64);
-        // }
-        // else
-        // if(args.length == 1){
-        //     runFile(args[0]);
-        //     hadError = false;
-        // }
-        // else{
-        //     runPrompt();
-        // }
+        if(args.length > 1){
+            System.out.println("Zag usage Zag [file.zag]");
+            System.exit(64);
+        }
+        else
+        if(args.length == 1){
+            runFile(args[0]);
+            hadError = false;
+        }
+        else{
+            runPrompt();
+        }
     }
 
 }
