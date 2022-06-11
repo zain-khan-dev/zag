@@ -116,10 +116,20 @@ public class Interpreter implements Visitor<Object>{
                     return (double)left + (double)right;
                 if(left instanceof String && right instanceof String)
                     return (String)left + (String)right;
+                if(left instanceof Double && right instanceof String || right instanceof Double && left instanceof String){
+                    if(left instanceof Double)
+                        left = stringify(left);
+                    else
+                        right = stringify(right);
+                    return (String)left + (String)right;
+                }
                 throw new RuntimeError(expr.operator, "Operands must be two Strings or Numbers");
             case MINUS:
                 return (double)left - (double)right;
             case SLASH:
+                if((double)right == 0){
+                    throw new RuntimeError(expr.operator, "Divide by zero error occured");
+                }
                 return (double)left / (double)right;
             case STAR:
                 return (double)left * (double)right;
