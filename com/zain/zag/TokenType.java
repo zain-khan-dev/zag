@@ -4,7 +4,7 @@ enum TokenType {
     
     // Single Character Tokens
     LEFT_PAREN, RIGHT_PAREN, PLUS, MINUS, 
-    SLASH, STAR, LEFT_BRACE, RIGHT_BRACE, SEMICOLON, DOT, COMMA,
+    SLASH, STAR, LEFT_BRACE, RIGHT_BRACE, SEMICOLON, DOT, COMMA, QUESTION_MARK, COLON,
 
 
     // One or two character Tokens

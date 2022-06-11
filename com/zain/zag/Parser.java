@@ -126,18 +126,68 @@ public class Parser {
         return result;
     }
 
+    private Expr conditional() {
+        Expr result = term();
+        if(match(QUESTION_MARK)){
+            Token questionOperator = previous();
+            Expr leftExpr = term();
+            if(match(COLON)){
+                Token colonOperator = previous();
+                Expr rightExpr = term();
+                return new Expr.Binary(result, questionOperator, new Expr.Binary(leftExpr, colonOperator, rightExpr));
+            }
+            throw error(questionOperator, "Expected an expression");
+            
+        }
+        return result;
+
+    }
+
 
 
     private Expr comparison() {
-        Expr result = term();
+        Expr result = conditional();
 
         while(match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)){
             Token operator = previous();
-            Expr rightExpr = term();
+            Expr rightExpr = conditional();
             result = new Expr.Binary(result, operator, rightExpr);
         }
         return result;
     }
+
+
+    
+
+
+    private Expr equality() {
+        Expr expr = comparison();
+        while(match(BANG_EQUAL, EQUAL_EQUAL)){
+            Token operator = previous();
+            Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
+    private Expr comma() {
+        Expr result = equality();
+        while(match(COMMA)){
+            Token operator = previous();
+            Expr right = equality();
+            result = new Expr.Binary(result, operator, right);
+        }
+        return result;
+    }
+
+
+
+
+    public Expr expression() {
+        return comma();
+    }
+
+
 
     private Token previous() {
 
@@ -178,21 +228,6 @@ public class Parser {
             }
         }
         return false;
-    }
-
-    private Expr equality() {
-        Expr expr = comparison();
-        while(match(BANG_EQUAL, EQUAL_EQUAL)){
-            Token operator = previous();
-            Expr right = comparison();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-        return expr;
-    }
-
-
-    public Expr expression() {
-        return equality();
     }
 
 

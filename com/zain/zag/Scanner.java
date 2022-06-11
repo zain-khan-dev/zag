@@ -193,6 +193,9 @@ public class Scanner {
             case '-':addToken(MINUS); break;
             case ';':addToken(SEMICOLON); break;
             case '*':addToken(STAR); break;
+            case ',':addToken(COMMA);break;
+            case '?':addToken(QUESTION_MARK);break;
+            case ':':addToken(COLON);break;
             
             // case where either one or two characters can act as a lexeme together
 
@@ -200,6 +203,7 @@ public class Scanner {
             case '=':addToken(match('=')?EQUAL_EQUAL:EQUAL);break;
             case '<':addToken(match('=')?LESS_EQUAL:LESS);break;
             case '>':addToken(match('=')?GREATER_EQUAL:GREATER);break;
+
 
 
 
