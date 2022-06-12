@@ -22,7 +22,7 @@ public class Parser {
         List<Stmt>statements = new ArrayList<>();
         try{
             while(!isAtEnd()){
-                statements.add(statement());
+                statements.add(declaration());
             }
         } catch(ParseError error){
             return null;
@@ -249,13 +249,30 @@ public class Parser {
 
 
     private Stmt handleVarDeclaration() {
-        Object value = primary();
-        if(match(EQUAL)){
-            Expr expr = expression();
-            new Stmt.Expression(expr);
+        Token name = consume(IDENTIFIER, "Expect variable name");
+        Expr expr = null;
+        if(match(EQUAL)){ // handle match after identifier
+            expr = expression(); // handle expression after identifier
+            
         }
-        consume(SEMICOLON, "Expected Semicolon at the end of statement");
+        consume(SEMICOLON, "Expected ';' after variable declaration");
+        return new Stmt.Var(name, expr);
     }
+
+    private Stmt declaration() {
+        try {
+
+            if(match(VAR)) return handleVarDeclaration();
+
+            return statement();
+        }
+        catch(ParseError e){
+            synchronize();
+            return null;
+        }
+    }
+
+
 
     private Stmt statement() {
         if(match(PRINT)){

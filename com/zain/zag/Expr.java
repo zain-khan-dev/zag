@@ -1,3 +1,6 @@
+package com.zain.zag;
+
+
 abstract class Expr {
 	interface Visitor<R>{
 		 R visitBinaryExpr(Binary expr);
@@ -30,10 +33,10 @@ abstract class Expr {
 				return visitor.visitGroupingExpr(this);
 		}
 
-		final Expr Expression;
+		final Expr expression;
 
-		Grouping( Expr Expression) {
-			this.Expression = Expression;
+		Grouping( Expr expression) {
+			this.expression = expression;
 		}
 	}
 	static class Literal extends Expr{

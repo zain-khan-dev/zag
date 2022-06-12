@@ -20,10 +20,16 @@ class AstPrinter implements Expr.Visitor<String> {
         return expr.accept(this);
     }
 
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr){
+        if(expr.name.literal == null)return "nil";
+        return expr.name.literal.toString();
+    }
+
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
-        return  parenthesize(expr.operator.lexeme,
-        expr.left, expr.right);
+        return  parenthesize(expr.operator.lexeme,expr.left, expr.right);
     }
 
     @Override

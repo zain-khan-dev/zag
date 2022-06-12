@@ -23,6 +23,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
+    public Object visitVariableExpr(Expr.Variable expr){
+        return expr.name.literal;
+    }
+
+
     public void execute(Stmt statement){
         statement.accept(this);
     }
@@ -40,6 +45,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }
         return value.toString();
     }
+
 
 
     @Override
