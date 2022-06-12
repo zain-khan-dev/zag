@@ -90,6 +90,10 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after expression");
             return new Expr.Grouping(expr);
         }
+        
+        if(match(IDENTIFIER)){
+            return new Expr.Variable(previous());
+        }
 
         throw error(peek(), "An expression expected");
     }
@@ -249,11 +253,11 @@ public class Parser {
 
 
     private Stmt handleVarDeclaration() {
-        Token name = consume(IDENTIFIER, "Expect variable name");
+        Token name = consume(IDENTIFIER, "Expected variable name");
         Expr expr = null;
         if(match(EQUAL)){ // handle match after identifier
+
             expr = expression(); // handle expression after identifier
-            
         }
         consume(SEMICOLON, "Expected ';' after variable declaration");
         return new Stmt.Var(name, expr);

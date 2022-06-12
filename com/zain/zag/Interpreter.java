@@ -1,11 +1,12 @@
 package com.zain.zag;
 
-import com.zain.zag.Expr.Visitor;
 import java.util.List;
 import static com.zain.zag.TokenType.*;
 
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
+
+    Environment environment = new Environment();
 
 
     public void interpret(List<Stmt>statements) {
@@ -23,12 +24,30 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
+    @Override
+    public Void visitVarStmt(Stmt.Var variable) {
+
+        Object value = null;
+
+        if(variable.initializer != null){
+            value = evaluate(variable.initializer);
+        }
+
+        environment.define(variable.name.lexeme, value);
+
+        return null;
+
+
+    }
+
+    @Override
     public Object visitVariableExpr(Expr.Variable expr){
-        return expr.name.literal;
+        return environment.get(expr.name);
     }
 
 
     public void execute(Stmt statement){
+
         statement.accept(this);
     }
 

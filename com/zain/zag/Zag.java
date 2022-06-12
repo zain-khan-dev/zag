@@ -64,10 +64,6 @@ public class Zag {
         Interpreter interpreter = new Interpreter();
 
         interpreter.interpret(statements);
-
-        // for(Token token:tokens){
-        //     System.out.println(token.type + " " + token.lexeme);
-        // }
     }
 
     public static void runFile(String fileName) throws IOException{
