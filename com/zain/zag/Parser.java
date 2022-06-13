@@ -163,7 +163,7 @@ public class Parser {
     }
 
 
-
+    
 
     private Expr equality() {
         Expr expr = comparison();
@@ -186,10 +186,24 @@ public class Parser {
     }
 
 
+    private Expr assignment() {
+        Expr expr =  comma();
+        if(match(EQUAL)){
+            Token equals = previous();
+            Expr right = assignment();
+            if(expr instanceof Expr.Variable){
+                Token variable = ((Expr.Variable)expr).name;
+                return new Expr.Assign(variable, right);
+            }
+            error(equals, "L value should be an assignment target");
+        }
+        return expr;
+    }
+
 
 
     public Expr expression() {
-        return comma();
+        return assignment();
     }
 
 

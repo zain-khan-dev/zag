@@ -17,6 +17,8 @@ public class Zag {
     private static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
+    static Environment environment = new Environment();
+    
 
     public static void error (int line, String message) { 
 

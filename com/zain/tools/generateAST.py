@@ -101,9 +101,10 @@ if __name__ == '__main__':
     output_dir = sys.argv[1]
     paramList = [
          "Binary   : Expr left, Token operator, Expr right",
-         "Grouping  : Expr Expression",
+         "Grouping  : Expr expression",
          "Literal  : Object value",
          "Unary  : Token operator, Expr right",
+         "Assign: Token name, Expr value",
          "Variable : Token name"
      ]
     basename = "Expr"

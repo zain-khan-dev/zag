@@ -6,8 +6,8 @@ import static com.zain.zag.TokenType.*;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
-    Environment environment = new Environment();
 
+    static Environment environment = new Environment();
 
     public void interpret(List<Stmt>statements) {
 
@@ -21,6 +21,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             Zag.runtimeError(error);
         }
         
+    }
+
+
+    public Void visitAssignExpr(Expr.Assign variable){
+        Object result = evaluate(variable.value);
+        environment.assign(variable.name, result);
+        return null;
     }
 
 

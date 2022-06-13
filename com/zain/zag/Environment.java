@@ -23,4 +23,13 @@ public class Environment {
 
         throw new RuntimeError(variableToken, "undefined variable "+ variableToken.lexeme);
     }
+
+    void assign(Token variableToken, Object value){
+        if(variableMapping.containsKey(variableToken.lexeme)){
+            variableMapping.put(variableToken.lexeme, value);
+            return;
+        }
+        throw new RuntimeError(variableToken, "Assignment to undefined variable");
+    }
+
 }
