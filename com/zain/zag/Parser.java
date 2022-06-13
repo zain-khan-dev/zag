@@ -296,13 +296,24 @@ public class Parser {
         if(match(PRINT)){
             return handlePrintStatement();   
         }
-        else
         if(match(VAR)){
             return handleVarDeclaration();
         }
+        if(match(LEFT_BRACE))
+            return new Stmt.Block(block());
         return handleExpressionStmt(); 
     }
 
+
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+        while(!check(RIGHT_BRACE) && !isAtEnd()){
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE, "Missing closing brace } after block");
+        return statements;
+    }
     
 
 
