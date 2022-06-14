@@ -329,6 +329,16 @@ public class Parser {
     }
 
 
+    Stmt handleWhileStatment() {
+        consume(LEFT_PAREN, "Missing '(' opening parenthesis after while");
+        Expr expr = expression();
+        consume(RIGHT_PAREN, "Missing ')' closing parenthesis after while");
+
+        Stmt body = statement();
+        return new Stmt.While(expr, body);
+    }
+
+
     private Stmt statement() {
         if(match(PRINT)){
             return handlePrintStatement();   
@@ -340,6 +350,8 @@ public class Parser {
             return new Stmt.Block(block());
         if(match(IF))
             return handleIfStatements();
+        if(match(WHILE))
+            return handleWhileStatment();
         return handleExpressionStmt(); 
     }
 

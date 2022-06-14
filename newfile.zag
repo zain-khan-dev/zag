@@ -1,5 +1,6 @@
-var r = 5;
-if(r > 9)
-	print "r is greater than 9";
-else
-	print "r is less than 9";
+var limit = 100;
+var idx = 0;
+while(idx < limit){
+	print "Zain is the best";
+	idx = idx + 1;
+}

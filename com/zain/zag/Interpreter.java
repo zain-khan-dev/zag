@@ -82,6 +82,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
+    public Void visitWhileStmt(Stmt.While whileStmt){
+        while(parseTruthy(evaluate(whileStmt.condition))){
+            execute(whileStmt.body);
+        }
+        return null;
+    }
+
+
     @Override
     public Void visitVarStmt(Stmt.Var variable) {
 

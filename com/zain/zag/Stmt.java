@@ -1,7 +1,6 @@
 package com.zain.zag;
 import java.util.List;
 
-
 abstract class Stmt {
 	interface Visitor<R>{
 		 R visitExpressionStmt(Expression stmt);
@@ -9,6 +8,7 @@ abstract class Stmt {
  		 R visitVarStmt(Var stmt);
  		 R visitBlockStmt(Block stmt);
  		 R visitIfStmt(If stmt);
+ 		 R visitWhileStmt(While stmt);
  	}
 	static class Expression extends Stmt{
 
@@ -79,6 +79,21 @@ abstract class Stmt {
 			this.condition = condition;
 			this.ifCondition = ifCondition;
 			this.elseCondition = elseCondition;
+		}
+	}
+	static class While extends Stmt{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitWhileStmt(this);
+		}
+
+		final Expr condition;
+		final Stmt body;
+
+		While( Expr condition, Stmt body) {
+			this.condition = condition;
+			this.body = body;
 		}
 	}
 
