@@ -99,26 +99,27 @@ if __name__ == '__main__':
         exit()
 
     output_dir = sys.argv[1]
-    # paramList = [
-    #      "Binary   : Expr left, Token operator, Expr right",
-    #      "Grouping  : Expr expression",
-    #      "Literal  : Object value",
-    #      "Unary  : Token operator, Expr right",
-    #      "Assign: Token name, Expr value",
-    #      "Variable : Token name",
-    #      "logical : Expr left, Token operator, Expr right"
-    #  ]
-    # basename = "Expr"
     paramList = [
-      "Expression : Expr expression",
-      "Print      : Expr expression",
-      "Var        : Token name, Expr initializer",
-      "Block      : List<Stmt> statements",
-      "If         : Expr condition, Stmt ifCondition, Stmt elseCondition",
-      "While      : Expr condition, Stmt body"
-    ]
+         "Binary   : Expr left, Token operator, Expr right",
+         "Grouping  : Expr expression",
+         "Literal  : Object value",
+         "Unary  : Token operator, Expr right",
+         "Assign: Token name, Expr value",
+         "Variable : Token name",
+         "logical : Expr left, Token operator, Expr right",
+         "Call    : Expr funcName, Token paren, List<Expr> arguments"
+     ]
+    basename = "Expr"
+    # paramList = [
+    #   "Expression : Expr expression",
+    #   "Print      : Expr expression",
+    #   "Var        : Token name, Expr initializer",
+    #   "Block      : List<Stmt> statements",
+    #   "If         : Expr condition, Stmt ifCondition, Stmt elseCondition",
+    #   "While      : Expr condition, Stmt body"
+    # ]
 
-    basename = "Stmt"
+    # basename = "Stmt"
     print(output_dir)
     define_ast(output_dir,basename, paramList)
     # print(generate_visitor_interface(paramList, basename))

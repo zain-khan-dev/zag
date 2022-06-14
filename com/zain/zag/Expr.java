@@ -1,5 +1,5 @@
 package com.zain.zag;
-
+import java.util.List;
 
 abstract class Expr {
 	interface Visitor<R>{
@@ -10,6 +10,7 @@ abstract class Expr {
  		 R visitAssignExpr(Assign expr);
  		 R visitVariableExpr(Variable expr);
  		 R visitlogicalExpr(logical expr);
+ 		 R visitCallExpr(Call expr);
  	}
 	static class Binary extends Expr{
 
@@ -112,6 +113,23 @@ abstract class Expr {
 			this.left = left;
 			this.operator = operator;
 			this.right = right;
+		}
+	}
+	static class Call extends Expr{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitCallExpr(this);
+		}
+
+		final Expr funcName;
+		final Token paren;
+		final List<Expr> arguments;
+
+		Call( Expr funcName, Token paren, List<Expr> arguments) {
+			this.funcName = funcName;
+			this.paren = paren;
+			this.arguments = arguments;
 		}
 	}
 

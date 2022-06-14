@@ -99,6 +99,43 @@ public class Parser {
         throw error(peek(), "An expression expected");
     }
 
+
+    private Expr finishCall(Expr expr) {
+        // handle comma seperated arguments
+
+        List<Expr> arguments = new ArrayList<>();
+
+        if(!check(RIGHT_PAREN)){
+            if(arguments.size() > 255){
+                error(peek(), "Number of arguments cannot be greater than 255");
+            }
+            do {
+                arguments.add(expression());
+            }while(match(COMMA));
+        }
+        Token paren = consume(RIGHT_PAREN, "')' expected after argument list");
+        //call function
+
+        return new Expr.Call(expr, paren, arguments);
+
+    }
+
+    private Expr call() {
+        Expr expr = primary();
+        
+        while(true){
+            if(match(LEFT_PAREN)){
+                Token operator = previous();
+                expr = finishCall(expr);
+            }
+            else{
+                break;
+            }
+        }
+        return expr;
+    }
+
+
     private Expr unary() {
 
         Expr result;
@@ -108,7 +145,7 @@ public class Parser {
             result = new Expr.Unary(operator, rightExpr);
         }
         else{
-            result = primary();
+            result = call();
         }
         return result;
     }
@@ -379,6 +416,11 @@ public class Parser {
             condition = new Expr.Literal(true);
         
         body = new Stmt.While(condition, body);
+
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+
 
         return body;
 
