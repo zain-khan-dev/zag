@@ -175,8 +175,10 @@ public class Parser {
         return expr;
     }
 
+
+
     private Expr comma() {
-        Expr result = equality();
+        Expr result = assignment();
         while(match(COMMA)){
             Token operator = previous();
             Expr right = equality();
@@ -185,9 +187,30 @@ public class Parser {
         return result;
     }
 
+    private Expr logical_or(){
+        Expr left = logical_and();
+        while(match(OR)){
+            Token op = previous();
+            Expr right = logical_and();
+            left = new Expr.logical(left, op, right);
+        }
+        return left;
+    }
+
+
+    private Expr logical_and() {
+        Expr left = equality();
+        while(match(AND)){
+            Token op = previous();
+            Expr right = equality();
+            right = new Expr.logical(left, op, right);
+        }
+        return left;
+    }
+
 
     private Expr assignment() {
-        Expr expr =  comma();
+        Expr expr =  logical_or();
         if(match(EQUAL)){
             Token equals = previous();
             Expr right = assignment();
@@ -203,7 +226,7 @@ public class Parser {
 
 
     public Expr expression() {
-        return assignment();
+        return comma();
     }
 
 

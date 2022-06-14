@@ -1,6 +1,9 @@
 package com.zain.zag;
 
 import java.util.List;
+
+import com.zain.zag.Expr.logical;
+
 import static com.zain.zag.TokenType.*;
 
 
@@ -35,6 +38,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         finally{
             this.environment = previous;
         }
+    }
+
+
+    @Override
+    public Object visitlogicalExpr(Expr.logical logicalExpr){
+        Object left = evaluate(logicalExpr.left);
+        if(logicalExpr.operator.type == TokenType.AND){
+            if(!parseTruthy(left)) return left;
+        }
+        if(logicalExpr.operator.type == TokenType.OR){
+            if(parseTruthy(left)) {
+                return left;
+            }
+        }
+        return evaluate(logicalExpr.right);
     }
 
 

@@ -1,7 +1,6 @@
 package com.zain.zag;
 
 
-
 abstract class Expr {
 	interface Visitor<R>{
 		 R visitBinaryExpr(Binary expr);
@@ -10,6 +9,7 @@ abstract class Expr {
  		 R visitUnaryExpr(Unary expr);
  		 R visitAssignExpr(Assign expr);
  		 R visitVariableExpr(Variable expr);
+ 		 R visitlogicalExpr(logical expr);
  	}
 	static class Binary extends Expr{
 
@@ -95,6 +95,23 @@ abstract class Expr {
 
 		Variable( Token name) {
 			this.name = name;
+		}
+	}
+	static class logical extends Expr{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitlogicalExpr(this);
+		}
+
+		final Expr left;
+		final Token operator;
+		final Expr right;
+
+		logical( Expr left, Token operator, Expr right) {
+			this.left = left;
+			this.operator = operator;
+			this.right = right;
 		}
 	}
 
