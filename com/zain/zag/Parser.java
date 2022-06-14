@@ -1,6 +1,7 @@
 package com.zain.zag;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import static com.zain.zag.TokenType.*;
 
 
@@ -339,6 +340,50 @@ public class Parser {
     }
 
 
+
+    private Stmt handleForStmt() {
+        consume(LEFT_PAREN, "Missing left parenthesis after for keyword");
+        Stmt initializer;
+        if(match(SEMICOLON)){
+            initializer = null;
+        }
+        else
+        if(match(VAR)){
+            initializer = handleVarDeclaration();
+        }
+        else{
+            initializer = handleExpressionStmt();
+        }
+
+        Expr condition = null;
+        if(!check(SEMICOLON)){
+            condition = expression();
+        }
+
+        consume(SEMICOLON, "Expected semicolon after initializer");
+
+        Expr increment = null;
+        if(!check(RIGHT_PAREN)){
+            increment = expression();
+        }
+        consume(RIGHT_PAREN, "Expected ')' after for loop");
+
+        Stmt body = statement();
+
+        if(increment != null){
+            body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+        }
+
+
+        if (condition == null) 
+            condition = new Expr.Literal(true);
+        
+        body = new Stmt.While(condition, body);
+
+        return body;
+
+    }
+
     private Stmt statement() {
         if(match(PRINT)){
             return handlePrintStatement();   
@@ -352,6 +397,8 @@ public class Parser {
             return handleIfStatements();
         if(match(WHILE))
             return handleWhileStatment();
+        if(match(FOR))
+            return handleForStmt();
         return handleExpressionStmt(); 
     }
 
