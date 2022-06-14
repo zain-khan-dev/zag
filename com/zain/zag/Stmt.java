@@ -1,12 +1,14 @@
 package com.zain.zag;
 import java.util.List;
 
+
 abstract class Stmt {
 	interface Visitor<R>{
 		 R visitExpressionStmt(Expression stmt);
  		 R visitPrintStmt(Print stmt);
  		 R visitVarStmt(Var stmt);
  		 R visitBlockStmt(Block stmt);
+ 		 R visitIfStmt(If stmt);
  	}
 	static class Expression extends Stmt{
 
@@ -60,6 +62,23 @@ abstract class Stmt {
 
 		Block( List<Stmt> statements) {
 			this.statements = statements;
+		}
+	}
+	static class If extends Stmt{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitIfStmt(this);
+		}
+
+		final Expr condition;
+		final Stmt ifCondition;
+		final Stmt elseCondition;
+
+		If( Expr condition, Stmt ifCondition, Stmt elseCondition) {
+			this.condition = condition;
+			this.ifCondition = ifCondition;
+			this.elseCondition = elseCondition;
 		}
 	}
 

@@ -291,6 +291,20 @@ public class Parser {
     }
 
 
+    private Stmt handleIfStatements() {
+        consume(LEFT_PAREN, "If statement missing left parenthesis");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "If statement missing right parenthesis");
+        Stmt ifBlock = statement();
+        Stmt elseBlock = null;
+        if(match(ELSE)){
+            elseBlock = statement();
+            return new Stmt.If(condition, ifBlock, elseBlock);
+        }
+
+        return new Stmt.If(condition, ifBlock, elseBlock);
+    }
+
 
     private Stmt statement() {
         if(match(PRINT)){
@@ -301,6 +315,8 @@ public class Parser {
         }
         if(match(LEFT_BRACE))
             return new Stmt.Block(block());
+        if(match(IF))
+            return handleIfStatements();
         return handleExpressionStmt(); 
     }
 

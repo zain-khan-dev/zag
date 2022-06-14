@@ -113,6 +113,7 @@ if __name__ == '__main__':
       "Print      : Expr expression",
       "Var        : Token name, Expr initializer",
       "Block      : List<Stmt> statements",
+      "If         : Expr condition, Stmt ifCondition, Stmt elseCondition"
     ]
 
     basename = "Stmt"

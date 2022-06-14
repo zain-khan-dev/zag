@@ -1,2 +1,5 @@
-var a = 10;
-a;
+var r = 5;
+if(r > 9)
+	print "r is greater than 9";
+else
+	print "r is less than 9";

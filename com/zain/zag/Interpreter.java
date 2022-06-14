@@ -38,6 +38,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
+    @Override
+    public Void visitIfStmt(Stmt.If ifStmt){
+        Object conditionalResult = evaluate(ifStmt.condition);
+        if(parseTruthy(conditionalResult)){
+            execute(ifStmt.ifCondition);
+        }
+        else
+        if(ifStmt.elseCondition != null)
+            execute(ifStmt.elseCondition);
+        return null;
+    }
+
+
     public Void visitBlockStmt(Stmt.Block block){
         executeBlock(block.statements, new Environment(environment));
         return null;
