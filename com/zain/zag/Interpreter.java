@@ -3,14 +3,40 @@ package com.zain.zag;
 import java.util.List;
 
 import com.zain.zag.Expr.logical;
+import java.util.ArrayList;
+
 
 import static com.zain.zag.TokenType.*;
 
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
+    final Environment global = new Environment();
 
-    Environment environment = new Environment();
+    Environment environment = global;
+
+
+    Interpreter() {
+        global.define("clock", new ZagCallable() {
+
+            @Override
+            public int arity(){
+                return 0;
+            }
+
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double)(System.currentTimeMillis())/1000;   
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn>";
+            }
+        });
+    }
+
 
     public void interpret(List<Stmt>statements) {
 
@@ -53,6 +79,26 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             }
         }
         return evaluate(logicalExpr.right);
+    }
+
+
+
+    @Override
+    public Object visitCallExpr(Expr.Call funCall){
+        Object funcName = evaluate(funCall.funcName);
+        
+        List<Object> arguments = new ArrayList<>();
+        for(Expr argument: funCall.arguments){
+            arguments.add(evaluate(argument));
+        }
+        if(!(funcName instanceof ZagCallable))
+            throw new RuntimeError(funCall.paren, "Can call only classes and functions");
+        ZagCallable function = (ZagCallable)funcName;
+        if(arguments.size() != function.arity()){
+            throw new RuntimeError(funCall.paren, "Expected" + function.arity() + " got "+ arguments.size());
+        }
+        return function.call(this, arguments);
+
     }
 
 
