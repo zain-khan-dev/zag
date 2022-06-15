@@ -136,6 +136,7 @@ public class Parser {
     }
 
 
+
     private Expr unary() {
 
         Expr result;
@@ -338,10 +339,33 @@ public class Parser {
         return new Stmt.Var(name, expr);
     }
 
+
+    private Stmt handleFunDeclaration(String kind) {
+        Token name = consume(IDENTIFIER, "Expected function name");
+        consume(LEFT_PAREN, "Expected '(' after function name");
+        List<Token>params = new ArrayList<>();
+        if(!check(RIGHT_PAREN)){
+            if(params.size() > 255){
+                error(peek(), "Number of parameters to a function should be less than 255");
+            }
+            do {
+                params.add(consume(IDENTIFIER, "Expected parameter name"));
+            } while(match(COMMA));
+        }
+        consume(RIGHT_PAREN, "Expected ')' after parameter list");
+        consume(LEFT_BRACE, "Expected '{' after "+ kind +" decalration");
+        List<Stmt> body = block();
+        return new Stmt.Function(name, params, body);
+    }
+
+
+
     private Stmt declaration() {
         try {
 
             if(match(VAR)) return handleVarDeclaration();
+
+            if(match(FUN)) return handleFunDeclaration("function");
 
             return statement();
         }

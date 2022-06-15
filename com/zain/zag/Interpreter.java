@@ -52,7 +52,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         
     }
 
-    private void executeBlock(List<Stmt>statements, Environment environment) {
+    public void executeBlock(List<Stmt>statements, Environment environment) {
         Environment previous = this.environment;
         try {
             this.environment = environment;
@@ -64,6 +64,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         finally{
             this.environment = previous;
         }
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function func){
+
+        ZagFunction function = new ZagFunction(func);
+        environment.define(func.name.lexeme, function);
+
+        return null;
     }
 
 
