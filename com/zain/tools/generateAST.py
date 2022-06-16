@@ -118,6 +118,7 @@ if __name__ == '__main__':
       "If         : Expr condition, Stmt ifCondition, Stmt elseCondition",
       "While      : Expr condition, Stmt body",
       "Function   : Token name, List<Token> parameters, List<Stmt> body",
+      "Return     : Token keyword, Expr value"
     ]
 
     basename = "Stmt"

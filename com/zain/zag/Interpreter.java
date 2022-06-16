@@ -66,6 +66,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }
     }
 
+
+    // public Void visitReturnStmt(Stmt.Return returnStmt){
+
+
+
+    //     if(returnStmt.value != null){
+    //         Object returnVal = evaluate(returnStmt.value);
+    //     }
+
+    //     return null;
+    // }
+
+
+
     @Override
     public Void visitFunctionStmt(Stmt.Function func){
         ZagFunction function = new ZagFunction(func);

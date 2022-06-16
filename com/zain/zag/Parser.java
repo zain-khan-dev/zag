@@ -355,6 +355,7 @@ public class Parser {
         consume(RIGHT_PAREN, "Expected ')' after parameter list");
         consume(LEFT_BRACE, "Expected '{' after "+ kind +" decalration");
         List<Stmt> body = block();
+
         return new Stmt.Function(name, params, body);
     }
 
@@ -447,7 +448,17 @@ public class Parser {
 
 
         return body;
+    }
 
+
+    private Stmt handleReturn(){
+        Token keyword = previous();
+        Expr value = null;
+        if(!check(SEMICOLON))
+            value = expression();
+
+        consume(SEMICOLON, "Expected semicolon after return statement");
+        return new Stmt.Return(keyword, value);
     }
 
     private Stmt statement() {
@@ -465,6 +476,8 @@ public class Parser {
             return handleWhileStatment();
         if(match(FOR))
             return handleForStmt();
+        if(match(RETURN))
+            return handleReturn();
         return handleExpressionStmt(); 
     }
 
@@ -474,7 +487,6 @@ public class Parser {
         while(!check(RIGHT_BRACE) && !isAtEnd()){
             statements.add(declaration());
         }
-
         consume(RIGHT_BRACE, "Missing closing brace } after block");
         return statements;
     }
