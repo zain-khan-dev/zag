@@ -1,5 +1,6 @@
 fun sayHi(first, last) {
   print "Hi, " + first + " " + last + "!";
+  return 10;
 }
 
-sayHi("Dear", "Reader");
+print sayHi("Dear", "Reader");

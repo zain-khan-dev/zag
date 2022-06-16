@@ -16,7 +16,12 @@ public class ZagFunction implements ZagCallable {
         for(int i=0;i<arguments.size();i++){
             environment.define(func.parameters.get(i).lexeme, arguments.get(i));
         }
-        interpreter.executeBlock(func.body, environment);
+        try{
+            interpreter.executeBlock(func.body, environment);
+        }
+        catch(Return returnVal){
+            return returnVal.value;
+        }
         return null;
     }
 

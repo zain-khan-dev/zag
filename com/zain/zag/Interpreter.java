@@ -67,16 +67,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
-    // public Void visitReturnStmt(Stmt.Return returnStmt){
+    public Void visitReturnStmt(Stmt.Return returnStmt){
+        Object returnVal = null;
+        if(returnStmt.value != null){
+            returnVal = evaluate(returnStmt.value);
+        }
+        throw new Return(returnVal);
 
-
-
-    //     if(returnStmt.value != null){
-    //         Object returnVal = evaluate(returnStmt.value);
-    //     }
-
-    //     return null;
-    // }
+    }
 
 
 
