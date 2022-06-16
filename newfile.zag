@@ -1,6 +1,5 @@
-var limit = 100;
-var idx = 0;
-while(idx < limit){
-	print "Zain is the best";
-	idx = idx + 1;
+fun sayHi(first, last) {
+  print "Hi, " + first + " " + last + "!";
 }
+
+sayHi("Dear", "Reader");

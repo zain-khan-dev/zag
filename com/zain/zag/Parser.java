@@ -110,7 +110,7 @@ public class Parser {
                 error(peek(), "Number of arguments cannot be greater than 255");
             }
             do {
-                arguments.add(expression());
+                arguments.add(equality());
             }while(match(COMMA));
         }
         Token paren = consume(RIGHT_PAREN, "')' expected after argument list");
