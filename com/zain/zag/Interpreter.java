@@ -80,7 +80,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitFunctionStmt(Stmt.Function func){
-        ZagFunction function = new ZagFunction(func);
+        ZagFunction function = new ZagFunction(func, environment);
         environment.define(func.name.lexeme, function);
         return null;
     }
