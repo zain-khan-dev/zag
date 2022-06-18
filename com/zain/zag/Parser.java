@@ -125,8 +125,11 @@ public class Parser {
         
         while(true){
             if(match(LEFT_PAREN)){
-                Token operator = previous();
                 expr = finishCall(expr);
+            }
+            if(match(DOT)){
+                Token name = consume(IDENTIFIER, "Expect property name after .");
+                expr = new Expr.Get(expr, name);
             }
             else{
                 break;
