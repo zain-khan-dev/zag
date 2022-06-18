@@ -164,6 +164,15 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
         return null;
     }
 
+
+    @Override
+    public Void visitClassStmt(Stmt.Class classStmt){
+        declare(classStmt.name);
+        define(classStmt.name);
+        return null;
+    }
+
+
     @Override
     public Void visitReturnStmt(Stmt.Return stmt){
         if(currentFunction == FunctionType.NONE)

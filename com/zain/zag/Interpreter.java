@@ -90,6 +90,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
     @Override
+    public Void visitClassStmt(Stmt.Class classStmt){
+        environment.define(classStmt.name.lexeme, null);
+        ZagClass newClass = new ZagClass(classStmt.name.lexeme);
+        environment.assign(classStmt.name, newClass);
+        return null;
+    }
+
+
+    @Override
     public Void visitFunctionStmt(Stmt.Function func){
         ZagFunction function = new ZagFunction(func, environment);
         environment.define(func.name.lexeme, function);

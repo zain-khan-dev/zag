@@ -340,7 +340,7 @@ public class Parser {
     }
 
 
-    private Stmt handleFunDeclaration(String kind) {
+    private Stmt.Function handleFunDeclaration(String kind) {
         Token name = consume(IDENTIFIER, "Expected function name");
         consume(LEFT_PAREN, "Expected '(' after function name");
         List<Token>params = new ArrayList<>();
@@ -360,11 +360,30 @@ public class Parser {
     }
 
 
+    private Stmt handleClassDeclaration() {
+        Token name = consume(IDENTIFIER, "Class must have a name");
+        List<Stmt.Function> functionList = new ArrayList<>();
+
+        consume(LEFT_BRACE, "Class must have an opening brace");
+
+        while(!check(RIGHT_BRACE) && !isAtEnd()){ // either variable declration or function declrataion
+            functionList.add(handleFunDeclaration("method"));
+        }
+
+        consume(RIGHT_BRACE, "Class must have closing brace");
+
+
+        return new Stmt.Class(name, functionList);
+    }
+
 
     private Stmt declaration() {
         try {
 
             if(match(VAR)) return handleVarDeclaration();
+
+
+            if(match(CLASS)) return handleClassDecalration();
 
             if(match(FUN)) return handleFunDeclaration("function");
 

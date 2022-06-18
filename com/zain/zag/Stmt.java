@@ -1,7 +1,6 @@
 package com.zain.zag;
 import java.util.List;
 
-
 abstract class Stmt {
 	interface Visitor<R>{
 		 R visitExpressionStmt(Expression stmt);
@@ -12,6 +11,7 @@ abstract class Stmt {
  		 R visitWhileStmt(While stmt);
  		 R visitFunctionStmt(Function stmt);
  		 R visitReturnStmt(Return stmt);
+ 		 R visitClassStmt(Class stmt);
  	}
 	static class Expression extends Stmt{
 
@@ -129,6 +129,21 @@ abstract class Stmt {
 		Return( Token keyword, Expr value) {
 			this.keyword = keyword;
 			this.value = value;
+		}
+	}
+	static class Class extends Stmt{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitClassStmt(this);
+		}
+
+		final Token name;
+		final List<Stmt.Function>  methods;
+
+		Class( Token name, List<Stmt.Function>  methods) {
+			this.name = name;
+			this.methods = methods;
 		}
 	}
 
