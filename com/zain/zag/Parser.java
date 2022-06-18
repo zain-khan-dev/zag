@@ -383,7 +383,7 @@ public class Parser {
             if(match(VAR)) return handleVarDeclaration();
 
 
-            if(match(CLASS)) return handleClassDecalration();
+            if(match(CLASS)) return handleClassDeclaration();
 
             if(match(FUN)) return handleFunDeclaration("function");
 
