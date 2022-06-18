@@ -203,14 +203,6 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
         return null;
     }
 
-    @Override Void 
-
-
-
-
-
-
-
     public void resolveFunction(Stmt.Function function){
         beginScope();
         for(Token param:function.parameters){

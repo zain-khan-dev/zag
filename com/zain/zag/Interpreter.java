@@ -4,7 +4,8 @@ import java.util.List;
 
 import com.zain.zag.Expr.logical;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.zain.zag.TokenType.*;
 
@@ -14,6 +15,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     final Environment global = new Environment();
 
     Environment environment = global;
+
+
+    private final Map<Expr, Integer> locals = new HashMap<>();
 
 
     Interpreter() {
@@ -36,6 +40,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             }
         });
     }
+
+
+    public void resolve(Expr expr, int depth){
+        locals.put(expr, depth);
+        return;
+    }
+
 
 
     public void interpret(List<Stmt>statements) {
@@ -140,10 +151,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
-    public Void visitAssignExpr(Expr.Assign variable){
+    @Override
+    public Object visitAssignExpr(Expr.Assign variable){
+
+        Integer depth = locals.get(variable);
         Object result = evaluate(variable.value);
+        if(depth != null)
+            environment.assignAt(depth, variable.name.lexeme, result);
+        else
         environment.assign(variable.name, result);
-        return null;
+        return result;
     }
 
 
@@ -171,9 +188,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     }
 
+
+    public Object lookupVariable(Token name, Expr targetExpr){
+        Integer depth = locals.get(targetExpr);
+        if(depth != null){
+            return environment.getAt(depth, name.lexeme);
+        }
+        return global.get(name);
+    }
+
+
     @Override
     public Object visitVariableExpr(Expr.Variable expr){
-        return environment.get(expr.name);
+        return lookupVariable(expr.name, expr);
     }
 
 
