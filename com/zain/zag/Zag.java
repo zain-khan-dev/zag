@@ -59,9 +59,20 @@ public class Zag {
         
         Parser parser = new Parser(tokens);
 
+        if(hadError){
+            return;
+        }
+
         List<Stmt> statements = parser.parse();
 
         Interpreter interpreter = new Interpreter();
+        
+        Resolver resolver = new Resolver(interpreter);
+
+        resolver.resolve(statements);
+        
+        if(hadError)
+        return;
 
         interpreter.interpret(statements);
     }
