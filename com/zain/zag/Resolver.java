@@ -12,8 +12,13 @@ import java.util.Stack;
 public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     
 
-    enum FunctionType {
+    private enum FunctionType {
         NONE,FUNCTION, METHODS
+    }
+
+
+    private enum ClassType {
+        NONE, CLASS
     }
 
 
@@ -22,6 +27,8 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     private final Stack<Map<String,Boolean>> scopes = new Stack<>();
 
     private FunctionType currentFunction = FunctionType.NONE;
+
+    private ClassType currentClassType = ClassType.NONE;
 
     Resolver( Interpreter interpreter){
         this.interpreter = interpreter;
@@ -168,21 +175,29 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     @Override
     public Void visitClassStmt(Stmt.Class classStmt){
 
+        ClassType enclosingClass = currentClassType;
         declare(classStmt.name);
         define(classStmt.name);
 
         beginScope();
+
+        currentClassType = ClassType.CLASS;
+
         scopes.peek().put("this", true);
         for(Stmt.Function methods: classStmt.methods){
             resolveFunction(methods, FunctionType.METHODS);
         }
         endScope();
+        currentClassType = enclosingClass;
         return null;
     }
 
 
     @Override
     public Void visitThisExpr(Expr.This thisExpr){
+        if(currentClassType == ClassType.NONE){
+            Zag.error(thisExpr.keyword, "This keyword must be inside a class only");
+        }
         resolveLocal(thisExpr, thisExpr.keyword);
         return null;
     }
