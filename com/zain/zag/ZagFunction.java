@@ -37,4 +37,10 @@ public class ZagFunction implements ZagCallable {
         return "<fn" + func.name.lexeme + ">";
     }
 
+    ZagFunction bind(ZagInstance instance) {
+        Environment environment = new Environment(closure);
+        environment.define("this", instance);
+        return new ZagFunction(func, environment);
+    }
+
 }

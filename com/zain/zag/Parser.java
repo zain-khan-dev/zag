@@ -85,6 +85,8 @@ public class Parser {
         if(match(NUMBER, STRING)){
             return new Expr.Literal(previous().literal);
         }
+        if(match(THIS))
+            return new Expr.This(previous());
         
         if(match(LEFT_PAREN)){
             Expr expr = expression();
@@ -270,7 +272,7 @@ public class Parser {
         return expr;
     }
 
-    
+
 
 
 

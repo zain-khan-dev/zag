@@ -167,12 +167,23 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
 
     @Override
     public Void visitClassStmt(Stmt.Class classStmt){
-        declare(classStmt.name);
 
-        for(Stmt.Function methods: classStmt.methods){
-            FunctionType.METHODS;
-        }
+        declare(classStmt.name);
         define(classStmt.name);
+
+        beginScope();
+        scopes.peek().put("this", true);
+        for(Stmt.Function methods: classStmt.methods){
+            resolveFunction(methods, FunctionType.METHODS);
+        }
+        endScope();
+        return null;
+    }
+
+
+    @Override
+    public Void visitThisExpr(Expr.This thisExpr){
+        resolveLocal(thisExpr, thisExpr.keyword);
         return null;
     }
 

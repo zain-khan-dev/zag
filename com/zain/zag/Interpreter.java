@@ -116,6 +116,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
     @Override
+    public Object visitThisExpr(Expr.This thisExpr){
+        return lookupVariable(thisExpr.keyword, thisExpr);
+        
+    }
+
+
+
+    @Override
     public Object visitlogicalExpr(Expr.logical logicalExpr){
         Object left = evaluate(logicalExpr.left);
         if(logicalExpr.operator.type == TokenType.AND){
