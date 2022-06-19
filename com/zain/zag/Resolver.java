@@ -13,7 +13,7 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     
 
     private enum FunctionType {
-        NONE,FUNCTION, METHODS
+        NONE,FUNCTION, METHODS,INITIALIZER
     }
 
 
@@ -185,7 +185,11 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
 
         scopes.peek().put("this", true);
         for(Stmt.Function methods: classStmt.methods){
-            resolveFunction(methods, FunctionType.METHODS);
+            FunctionType functionType = FunctionType.METHODS;
+            if(methods.name.lexeme.equals("init")){
+                functionType = FunctionType.INITIALIZER;
+            }
+            resolveFunction(methods, functionType);
         }
         endScope();
         currentClassType = enclosingClass;
@@ -225,7 +229,13 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
             Zag.error(stmt.keyword, "Return statement must be inside a function body");
         }
         if(stmt.value != null)
+        {
+            if(currentFunction == FunctionType.INITIALIZER){
+                Zag.error(stmt.keyword, "Can't return a value from initializer");
+            }
             resolve(stmt.value);
+        }
+            
         return null;   
     }
 

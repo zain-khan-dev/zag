@@ -5,11 +5,12 @@ public class ZagFunction implements ZagCallable {
     Stmt.Function func;
 
     private final Environment closure;
-    
+    private final boolean isInitializer;
 
-    ZagFunction(Stmt.Function func, Environment environment){
+    ZagFunction(Stmt.Function func, Environment environment, boolean isInitializer){
         this.func = func;
         this.closure = environment;
+        this.isInitializer = isInitializer;
     }
 
     @Override
@@ -22,8 +23,11 @@ public class ZagFunction implements ZagCallable {
         try{
             interpreter.executeBlock(func.body, environment);
         }
-        catch(Return returnVal){
+        catch(Return returnVal){   
             return returnVal.value;
+        }
+        if(isInitializer){
+            return closure.getAt(0, "this");
         }
         return null;
     }
@@ -40,7 +44,7 @@ public class ZagFunction implements ZagCallable {
     ZagFunction bind(ZagInstance instance) {
         Environment environment = new Environment(closure);
         environment.define("this", instance);
-        return new ZagFunction(func, environment);
+        return new ZagFunction(func, environment, isInitializer);
     }
 
 }

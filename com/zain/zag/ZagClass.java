@@ -20,12 +20,26 @@ public class ZagClass implements ZagCallable {
 
     @Override
     public int arity(){
+        ZagFunction initializer = findMethod("init");
+        if(initializer != null){
+            return initializer.arity();
+        }
         return 0;
+    }
+
+    public ZagFunction findMethod(String functionName){
+        return methods.get(functionName);
     }
 
     @Override 
     public Object call(Interpreter interpreter, List<Object> arguments){
         ZagInstance instance = new ZagInstance(this);
+
+        ZagFunction initializer = findMethod("init");
+        if(initializer != null){
+            initializer.bind(instance).call(interpreter, arguments);
+        }
+        
         return instance;
     }
 
