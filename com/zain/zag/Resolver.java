@@ -179,6 +179,12 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
         declare(classStmt.name);
         define(classStmt.name);
 
+        if(classStmt.superclass != null){
+            if(classStmt.superclass.name.lexeme.equals(classStmt.name.lexeme)){
+                Zag.error(classStmt.name, "A class can't inherit from itself");
+            }
+            resolve(classStmt.superclass);
+        }
         beginScope();
 
         currentClassType = ClassType.CLASS;

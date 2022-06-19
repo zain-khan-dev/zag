@@ -95,13 +95,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Map<String, ZagFunction> methods = new HashMap<>();
         environment.define(classStmt.name.lexeme, null);
         
+        Object superclass = null;
+
+        if(classStmt.superclass != null){
+            superclass = evaluate(classStmt.superclass);
+            if(!(superclass instanceof ZagClass)){
+                Zag.error(classStmt.name, "The superclass must be a class name");
+            }
+        }
 
         for(Stmt.Function method:classStmt.methods){
 
             ZagFunction function = new ZagFunction(method, environment, method.name.lexeme.equals("init"));
             methods.put(method.name.lexeme, function);
         }
-        ZagClass newClass = new ZagClass(classStmt.name.lexeme, methods);
+        ZagClass newClass = new ZagClass(classStmt.name.lexeme, ((ZagClass)superclass),  methods);
 
         environment.assign(classStmt.name, newClass);
         return null;

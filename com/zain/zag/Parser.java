@@ -375,6 +375,11 @@ public class Parser {
     private Stmt handleClassDeclaration() {
         Token name = consume(IDENTIFIER, "Class must have a name");
         List<Stmt.Function> functionList = new ArrayList<>();
+        Expr.Variable superVar = null;
+        if(match(LESS)){
+            consume(IDENTIFIER, "Inheritance must accept a superclass name");
+            superVar = new Expr.Variable(previous());
+        }
 
         consume(LEFT_BRACE, "Class must have an opening brace");
 
@@ -385,7 +390,7 @@ public class Parser {
         consume(RIGHT_BRACE, "Class must have closing brace");
 
 
-        return new Stmt.Class(name, functionList);
+        return new Stmt.Class(name, superVar, functionList);
     }
 
 

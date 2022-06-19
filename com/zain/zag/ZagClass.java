@@ -5,11 +5,12 @@ import java.util.Map;
 public class ZagClass implements ZagCallable {
     final String name;
     private final Map<String,ZagFunction>methods;
+    final private ZagClass superclass;
 
-
-    ZagClass(String name, Map<String,ZagFunction>methods){
+    ZagClass(String name, ZagClass superclass, Map<String,ZagFunction>methods){
         this.name = name;
         this.methods = methods;
+        this.superclass = superclass;
     }
     
     @Override
