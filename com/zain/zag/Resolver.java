@@ -181,6 +181,14 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
 
 
     @Override
+    public Void visitSetExpr(Expr.Set setExpr) {
+        resolve(setExpr.value);
+        resolve(setExpr.object);
+        return null;
+    } 
+
+
+    @Override
     public Void visitReturnStmt(Stmt.Return stmt){
         if(currentFunction == FunctionType.NONE)
         {

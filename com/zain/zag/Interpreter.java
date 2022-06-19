@@ -250,12 +250,23 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
     @Override
-    public Void visitGetExpr(Expr.Get getExpr){
+    public Object visitGetExpr(Expr.Get getExpr){
         Object field = evaluate(getExpr.object);
         if(field instanceof ZagInstance){
             return ((ZagInstance) field).get(getExpr.name);
         }
         throw new RuntimeError(getExpr.name, "Only instances have properties.");
+    }
+
+
+    @Override
+    public Object visitSetExpr(Expr.Set setExpr) {
+        Object instanceField = evaluate(setExpr.object);
+        if(!(instanceField instanceof ZagInstance)){
+            throw new RuntimeError(setExpr.name, "Only instances have fields");
+        }
+        Object value = evaluate(setExpr.value);
+        return ((ZagInstance)instanceField).set(setExpr.name, value);
     }
 
 

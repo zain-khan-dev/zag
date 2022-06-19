@@ -21,8 +21,8 @@ public class ZagClass implements ZagCallable {
     }
 
     @Override 
-    public Object call(Interpreter interpreter, List<Objects> arguments){
-        ZagInstace instance = new ZagInstace(this);
+    public Object call(Interpreter interpreter, List<Object> arguments){
+        ZagInstance instance = new ZagInstance(this);
         return instance;
     }
 }

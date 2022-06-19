@@ -1,6 +1,5 @@
 package com.zain.zag;
 import java.util.List;
-
 abstract class Expr {
 	interface Visitor<R>{
 		 R visitBinaryExpr(Binary expr);
@@ -12,6 +11,7 @@ abstract class Expr {
  		 R visitlogicalExpr(logical expr);
  		 R visitCallExpr(Call expr);
  		 R visitGetExpr(Get expr);
+ 		 R visitSetExpr(Set expr);
  	}
 	static class Binary extends Expr{
 
@@ -146,6 +146,23 @@ abstract class Expr {
 		Get( Expr object, Token name) {
 			this.object = object;
 			this.name = name;
+		}
+	}
+	static class Set extends Expr{
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+				return visitor.visitSetExpr(this);
+		}
+
+		final Expr object;
+		final Token name;
+		final Expr value;
+
+		Set( Expr object, Token name, Expr value) {
+			this.object = object;
+			this.name = name;
+			this.value = value;
 		}
 	}
 

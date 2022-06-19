@@ -260,10 +260,17 @@ public class Parser {
                 Token variable = ((Expr.Variable)expr).name;
                 return new Expr.Assign(variable, right);
             }
+            else
+            if(expr instanceof Expr.Get){
+                Expr.Get get = (Expr.Get)expr;  
+                return new Expr.Set(get.object, get.name, right);
+            }
             error(equals, "L value should be an assignment target");
         }
         return expr;
     }
+
+    
 
 
 
@@ -385,10 +392,11 @@ public class Parser {
 
             if(match(VAR)) return handleVarDeclaration();
 
-
             if(match(CLASS)) return handleClassDeclaration();
 
             if(match(FUN)) return handleFunDeclaration("function");
+
+
 
             return statement();
         }

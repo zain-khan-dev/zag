@@ -108,7 +108,8 @@ if __name__ == '__main__':
          "Variable : Token name",
          "logical : Expr left, Token operator, Expr right",
          "Call    : Expr funcName, Token paren, List<Expr> arguments",
-         "Get     : Expr object, Token name"
+         "Get     : Expr object, Token name",
+         "Set     : Expr object, Token name, Expr value",
      ]
     basename = "Expr"
     # paramList = [

@@ -18,12 +18,16 @@ public class ZagInstance {
         return zagClass.name + " instance";
     }
 
-    @Override
     public Object get(Token name){
         if(fields.containsKey(name.lexeme)){
             return fields.get(name.lexeme);
         }
-        throw new RuntimeError(name, "Undefined property" + name.lexeme + " .");
+        throw new RuntimeError(name, "Undefined property" + name.lexeme + " '.");
     }
+
+    public Object set(Token name, Object value){
+        return fields.put(name.lexeme, value);
+    }
+
 
 }
