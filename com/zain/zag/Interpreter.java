@@ -103,6 +103,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                 Zag.error(classStmt.name, "The superclass must be a class name");
             }
         }
+        if (classStmt.superclass != null) {
+            environment = new Environment(environment);
+            environment.define("super", superclass);
+          }
 
         for(Stmt.Function method:classStmt.methods){
 
@@ -110,9 +114,32 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             methods.put(method.name.lexeme, function);
         }
         ZagClass newClass = new ZagClass(classStmt.name.lexeme, ((ZagClass)superclass),  methods);
-
+        
+        if (superclass != null) {
+            environment = environment.enclosing;
+        }
+        
         environment.assign(classStmt.name, newClass);
+        
         return null;
+    }
+
+    @Override
+    public Object visitSuperExpr(Expr.Super expr) {
+      int distance = locals.get(expr);
+      ZagClass superclass = (ZagClass)environment.getAt(
+          distance, "super");
+
+    ZagInstance object = (ZagInstance)environment.getAt(distance - 1, "this");
+
+    ZagFunction method = superclass.findMethod(expr.method.lexeme);
+
+    if (method == null) {
+        throw new RuntimeError(expr.method,
+            "Undefined property '" + expr.method.lexeme + "'.");
+      }
+  
+    return method.bind(object);
     }
 
 

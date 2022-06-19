@@ -18,7 +18,7 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
 
 
     private enum ClassType {
-        NONE, CLASS
+        NONE, CLASS, SUBCLASS
     }
 
 
@@ -180,11 +180,18 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
         define(classStmt.name);
 
         if(classStmt.superclass != null){
+            currentClassType = ClassType.SUBCLASS;
             if(classStmt.superclass.name.lexeme.equals(classStmt.name.lexeme)){
                 Zag.error(classStmt.name, "A class can't inherit from itself");
             }
             resolve(classStmt.superclass);
         }
+
+        if(classStmt.superclass != null){
+            beginScope();
+            scopes.peek().put("super", true);
+        }
+
         beginScope();
 
         currentClassType = ClassType.CLASS;
@@ -198,7 +205,25 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
             resolveFunction(methods, functionType);
         }
         endScope();
+
+        if(classStmt.superclass != null){
+            endScope();
+        }
+
         currentClassType = enclosingClass;
+        return null;
+    }
+
+
+    @Override
+    public Void visitSuperExpr(Expr.Super superExpr){
+        if (currentClassType == ClassType.NONE) {
+            Zag.error(superExpr.keyword,"Can't use 'super' outside of a class.");
+        } 
+        else if (currentClassType != ClassType.SUBCLASS) {
+            Zag.error(superExpr.keyword,"Can't use 'super' in a class with no superclass.");
+        }
+        resolveLocal( superExpr,superExpr.keyword);
         return null;
     }
 

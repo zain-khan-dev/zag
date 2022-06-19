@@ -29,7 +29,12 @@ public class ZagClass implements ZagCallable {
     }
 
     public ZagFunction findMethod(String functionName){
-        return methods.get(functionName);
+        if(methods.containsKey(functionName))
+            return methods.get(functionName);
+        if(superclass != null){
+            return superclass.findMethod(functionName);
+        }
+        return null;
     }
 
     @Override 

@@ -25,6 +25,7 @@ public class ZagInstance {
         ZagFunction function = zagClass.getMethod(name.lexeme);
         if(function != null)
         return function.bind(this);
+
         throw new RuntimeError(name, "Undefined property" + name.lexeme + " '.");
     }
 

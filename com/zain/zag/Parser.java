@@ -97,6 +97,12 @@ public class Parser {
         if(match(IDENTIFIER)){
             return new Expr.Variable(previous());
         }
+        if(match(SUPER)){
+            Token keyword = previous();
+            consume(DOT, "Expected '.' after super keyword");
+            consume(IDENTIFIER, "Expected a function name");
+            return new Expr.Super(keyword, previous());
+        }
 
         throw error(peek(), "An expression expected");
     }
