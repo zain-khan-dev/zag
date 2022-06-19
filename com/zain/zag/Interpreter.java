@@ -91,8 +91,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitClassStmt(Stmt.Class classStmt){
+
+        Map<String, ZagFunction> methods = new HashMap<>();
         environment.define(classStmt.name.lexeme, null);
-        ZagClass newClass = new ZagClass(classStmt.name.lexeme);
+        
+
+        for(Stmt.Function method:classStmt.methods){
+            ZagFunction function = new ZagFunction(method, environment);
+            methods.put(method.name.lexeme, function);
+        }
+        ZagClass newClass = new ZagClass(classStmt.name.lexeme, methods);
+
         environment.assign(classStmt.name, newClass);
         return null;
     }

@@ -13,7 +13,7 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     
 
     enum FunctionType {
-        NONE,FUNCTION
+        NONE,FUNCTION, METHODS
     }
 
 
@@ -168,6 +168,10 @@ public class Resolver implements Stmt.Visitor<Void>, Expr.Visitor<Void>{
     @Override
     public Void visitClassStmt(Stmt.Class classStmt){
         declare(classStmt.name);
+
+        for(Stmt.Function methods: classStmt.methods){
+            FunctionType.METHODS;
+        }
         define(classStmt.name);
         return null;
     }

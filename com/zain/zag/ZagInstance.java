@@ -22,6 +22,9 @@ public class ZagInstance {
         if(fields.containsKey(name.lexeme)){
             return fields.get(name.lexeme);
         }
+        ZagFunction function = zagClass.getMethod(name.lexeme);
+        if(function != null)
+        return function;
         throw new RuntimeError(name, "Undefined property" + name.lexeme + " '.");
     }
 
